@@ -1,5 +1,11 @@
+import status from 'http-status';
 import { auth } from '../../lib/auth';
 import { IRegister, ILogin } from './auth.interface';
+import AppError from '../../errors/AppError';
+import { envConfig } from '../../../config';
+import { jwtHelpers } from '../../helpers/jwtHelpers';
+import { en, is } from 'zod/locales';
+import { tokenHelpers } from '../../helpers/tokenHelpers';
 
 const registerUserService = async (payload: IRegister) => {
   const { name, email, password } = payload;
@@ -11,9 +17,32 @@ const registerUserService = async (payload: IRegister) => {
         }
     });
     if (!data.user){
-        throw new Error("Patient registration failed");
-    }
-    return data.user;
+        throw new AppError(status.BAD_REQUEST, "User registration failed");
+    };
+
+    const jwtPayload = {
+    userId: data.user.id,
+    email: data.user.email,
+    role: data.user.role,
+    name: data.user.name,
+    status: data.user.status,
+    isDeleted: data.user.isDeleted,  
+    emailVerified: data.user.emailVerified
+  };
+
+  const accessToken = tokenHelpers.getAccessToken(
+    jwtPayload
+  );
+
+  const refreshToken = tokenHelpers.getRefreshToken(
+    jwtPayload,
+  );
+
+  return {
+    ...data,
+    accessToken,
+    refreshToken,
+  };
 };
 
 
@@ -26,17 +55,39 @@ const loginUserService = async (payload: ILogin) => {
   });
 
   if (!session){
-    throw new Error("Patient login failed");
+    throw new AppError(status.UNAUTHORIZED, "Invalid email or password");
   }
 
   if (session.user.status === "INACTIVE") {
-    throw new Error("Patient is inactive");
+    throw new AppError(status.FORBIDDEN, "User is inactive");
   }
   if (session.user.isDeleted) {
-    throw new Error("Patient is deleted");
+    throw new AppError(status.FORBIDDEN, "User is deleted");
   }
 
-  return session;
+  const jwtPayload = {
+    userId: session.user.id,
+    email: session.user.email,
+    role: session.user.role,
+    name: session.user.name,
+    status: session.user.status,
+    isDeleted: session.user.isDeleted,  
+    emailVerified: session.user.emailVerified
+  };
+
+  const accessToken = tokenHelpers.getAccessToken(
+    jwtPayload
+  );
+
+  const refreshToken = tokenHelpers.getRefreshToken(
+    jwtPayload,
+  );
+
+  return {
+    ...session,
+    accessToken,
+    refreshToken,
+  };
 };
 
 export const authServices = {

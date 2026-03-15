@@ -1,12 +1,16 @@
 # 🌱 Green Bangladesh – Product Requirements Document (PRD)
 
-## 1. Product Overview
+---
+
+# 1. Product Overview
 
 **Green Bangladesh** is a web application that visualizes tree density across all 64 districts of Bangladesh and encourages citizens to plant more trees.
 
-The platform categorizes districts into environmental zones based on tree density and highlights areas where tree plantation efforts are most needed.
+The platform categorizes districts into environmental zones based on tree density and highlights areas where plantation efforts are most needed.
 
-Users can also report newly planted trees to contribute to environmental improvement and track community impact.
+Users can report newly planted trees, helping track environmental progress and community contribution.
+
+Administrators maintain environmental data accuracy and manage users through a dedicated admin dashboard.
 
 ---
 
@@ -14,14 +18,14 @@ Users can also report newly planted trees to contribute to environmental improve
 
 ### Primary Goals
 
-* Visualize tree density distribution across Bangladesh.
-* Identify districts with low vegetation coverage.
-* Encourage tree plantation through community participation.
-* Track user-reported tree plantation activities.
+* Visualize tree density distribution across all districts of Bangladesh
+* Identify districts with low vegetation coverage
+* Encourage citizens to plant trees
+* Track community plantation activities
 
 ### Long-Term Vision
 
-Create a **national environmental awareness platform** that helps citizens and organizations monitor and improve Bangladesh’s green coverage.
+Build a **national environmental awareness platform** that helps citizens, volunteers, and organizations monitor and improve Bangladesh's green coverage.
 
 ---
 
@@ -29,21 +33,27 @@ Create a **national environmental awareness platform** that helps citizens and o
 
 ### Citizens
 
-People who want to contribute to environmental protection by planting trees.
+Individuals who want to contribute to environmental protection by planting trees.
 
 ### Environmental Volunteers
 
-Organizations or individuals tracking plantation campaigns.
+Organizations or individuals who monitor plantation campaigns.
 
-### Policy Researchers
+### Researchers
 
-People who want to observe tree density patterns across districts.
+People interested in environmental data and tree density distribution.
+
+### Platform Administrators
+
+Authorized users responsible for maintaining environmental data and moderating platform activities.
 
 ---
 
 # 4. Core MVP Features
 
-## 4.1 Authentication System
+---
+
+# 4.1 Authentication System
 
 Users must authenticate before submitting plantation reports.
 
@@ -55,18 +65,19 @@ Authentication will be implemented using **Better Auth**.
 * User login
 * Session management
 * Secure authentication
+* Role-based authorization
 
 ---
 
 # 4.2 Bangladesh District Tree Density Map
 
-The application will display an **interactive map of Bangladesh with all 64 districts**.
+The platform will display an **interactive map of Bangladesh with all 64 districts**.
 
-Each district will be color-coded based on tree density zones.
+Each district will be color-coded based on environmental zone.
 
 ### Zone System
 
-Tree density score determines the zone:
+Zones are derived from the **tree density score**.
 
 | Score Range | Zone        | Color |
 | ----------- | ----------- | ----- |
@@ -74,14 +85,12 @@ Tree density score determines the zone:
 | 31 – 50     | Orange Zone | 🟠    |
 | > 50        | Green Zone  | 🟢    |
 
-Zones represent environmental health levels.
-
 ### Map Capabilities
 
 Users can:
 
-* View the entire Bangladesh map
-* Hover or click on districts
+* View all districts
+* Click on a district
 * See district statistics
 * Understand environmental health visually
 
@@ -89,7 +98,7 @@ Users can:
 
 # 4.3 District Environmental Data
 
-Each district will store tree density information.
+District environmental data is maintained by administrators.
 
 ### District Data Fields
 
@@ -99,7 +108,7 @@ Each district will store tree density information.
 * Estimated Total Trees
 * Trees Per Km²
 
-The system **does NOT store zone or score in the database**.
+The system **does not store zone or score in the database**.
 These values are calculated dynamically in the backend.
 
 ---
@@ -108,34 +117,31 @@ These values are calculated dynamically in the backend.
 
 Users can report that they planted trees.
 
-This helps measure community participation and environmental impact.
-
-### User Submission Data
-
-Users can submit:
+### Plantation Report Fields
 
 * Number of trees planted
-* Location
+* Location description
 * District
 * Plantation date
+* User ID
 
 ### Purpose
 
 * Track tree plantation activity
-* Encourage community participation
-* Measure environmental contribution
+* Encourage environmental participation
+* Measure community impact
 
 ---
 
 # 4.5 District Leaderboard
 
-The system will show districts contributing the most to tree plantation.
+The system ranks districts based on community plantation activity.
 
 ### Leaderboard Data
 
-* District Name
-* Total Trees Planted by Users
-* Number of Plantation Reports
+* District name
+* Total trees planted
+* Number of plantation reports
 
 ### Example
 
@@ -147,57 +153,128 @@ Top Green Districts
 
 ---
 
-# 5. Database Entities (MVP)
+# 4.6 Admin Dashboard
 
-## Core Entities
+The platform includes a secure **Admin Dashboard**.
 
-### User
+Only administrators can access this dashboard.
 
-Authenticated platform user.
+### Admin Responsibilities
 
-### Profile
+Admins can:
 
-Stores extended user information.
-
-### Division
-
-Administrative division of Bangladesh.
-
-### District
-
-District-level environmental data.
-
-### PlantationReport
-
-User-reported tree plantation record.
+* Insert district environmental data
+* Update district tree density information
+* Manage platform users
+* Monitor plantation reports
+* Maintain data accuracy
 
 ---
 
-# 6. Database Relationships
+# 5. Role-Based Access Control (RBAC)
 
-### Division → District
+The system implements role-based access control.
 
-One division contains many districts.
+### User Roles
 
-### District → PlantationReport
-
-Each plantation report belongs to a district.
-
-### User → PlantationReport
-
-A user can submit many plantation reports.
-
-### User → Profile
-
-Each user has one profile.
+| Role  | Permissions                    |
+| ----- | ------------------------------ |
+| USER  | Submit plantation reports      |
+| ADMIN | Manage district data and users |
 
 ---
 
-# 7. Tree Density Score Calculation
+# 6. District Data Management (Admin Only)
 
-Tree density score is calculated dynamically.
+Only administrators can modify environmental data.
 
-### Formula
+### Admin Capabilities
+
+Admins can:
+
+* Add district environmental data
+* Update tree density information
+* Update estimated tree counts
+* Modify district environmental metrics
+
+### Editable Fields
+
+* Estimated Trees
+* Trees Per Km²
+* Area (optional)
+
+### Restrictions
+
+Regular users **cannot modify district environmental data**.
+
+---
+
+# 7. User Management (Admin Only)
+
+Admins can manage all registered users.
+
+### Admin Capabilities
+
+* View all users
+* Search users
+* Change user roles
+* Suspend users
+* Delete users (optional)
+
+### Admin User Data View
+
+Admins can see:
+
+* User name
+* Email
+* Role
+* Total trees planted
+* Number of plantation reports
+
+---
+
+# 8. Plantation Report Moderation
+
+Admins can monitor plantation reports to maintain platform integrity.
+
+### Admin Actions
+
+* View all plantation reports
+* Detect spam or invalid submissions
+* Delete invalid reports
+* Monitor district participation
+
+---
+
+# 9. Database Entities (MVP)
+
+### Core Entities
+
+User
+Profile
+Division
+District
+PlantationReport
+
+---
+
+# 10. Database Relationships
+
+User → Profile (One-to-One)
+
+User → PlantationReport (One-to-Many)
+
+Division → District (One-to-Many)
+
+District → PlantationReport (One-to-Many)
+
+---
+
+# 11. Tree Density Score Calculation
+
+Tree density score is calculated dynamically in the backend.
+
+Formula:
 
 ```
 score = (treesPerKm2 / 12000) * 100
@@ -207,7 +284,7 @@ Score is clamped between **0 and 100**.
 
 ---
 
-# 8. Zone Calculation
+# 12. Zone Calculation
 
 Zone is derived from the tree density score.
 
@@ -217,13 +294,15 @@ Score <= 50  → ORANGE
 Score > 50   → GREEN
 ```
 
-Zones are **computed in backend services**, not stored in the database.
+Zone values are **not stored in the database**.
 
 ---
 
-# 9. Backend API Overview
+# 13. Backend API Overview
 
-## Authentication
+---
+
+## Authentication APIs
 
 POST /api/auth/signup
 POST /api/auth/login
@@ -234,23 +313,23 @@ POST /api/auth/logout
 ## District APIs
 
 GET /api/districts
-Returns all districts with calculated zone and score.
+Returns all districts with calculated score and zone.
 
 GET /api/districts/:id
-Returns detailed district information.
+Returns district details.
 
 ---
 
 ## Plantation APIs
 
 POST /api/plantations
-Create a plantation report.
+Create plantation report.
 
 GET /api/plantations
-Get all plantation reports.
+Retrieve plantation reports.
 
 GET /api/districts/:id/plantations
-Get plantation reports for a district.
+Retrieve plantation reports for a district.
 
 ---
 
@@ -262,11 +341,37 @@ Returns districts ranked by total planted trees.
 
 ---
 
-# 10. Data Seeding
+# 14. Admin APIs
 
-The system will initially use **dummy environmental data for all 64 districts** of Bangladesh.
+### District Management
 
-The seed dataset includes:
+POST /api/admin/districts
+PATCH /api/admin/districts/:id
+GET /api/admin/districts
+
+---
+
+### User Management
+
+GET /api/admin/users
+PATCH /api/admin/users/:id/role
+PATCH /api/admin/users/:id/status
+DELETE /api/admin/users/:id
+
+---
+
+### Plantation Moderation
+
+GET /api/admin/plantations
+DELETE /api/admin/plantations/:id
+
+---
+
+# 15. Data Seeding
+
+Initial environmental data for all **64 districts of Bangladesh** will be seeded into the database.
+
+Seed data includes:
 
 * District name
 * Division
@@ -274,66 +379,67 @@ The seed dataset includes:
 * Estimated trees
 * Trees per km²
 
-Real environmental data can be integrated later without changing the system architecture.
+This dataset will be replaced later with real environmental data.
 
 ---
 
-# 11. Tech Stack
+# 16. Tech Stack
 
 ### Frontend
 
-* Next.js
-* React
-* TailwindCSS
-* Leaflet or Mapbox for maps
+Next.js
+React
+TailwindCSS
+Leaflet or Mapbox for maps
 
 ### Backend
 
-* Node.js
-* Express.js
-* Prisma ORM
-* PostgreSQL
+Node.js
+Express.js
+Prisma ORM
+PostgreSQL
 
 ### Authentication
 
-* Better Auth
+Better Auth
 
 ### Deployment
 
-* Vercel (frontend)
-* VPS / Railway / Render (backend)
+Frontend: Vercel
+Backend: VPS / Render / Railway
 
 ---
 
-# 12. Future Features (Post-MVP)
+# 17. Future Features (Post-MVP)
 
 Community system:
 
 * User communities
 * Environmental discussion posts
 * Comments
-* Campaign organization
+* Plantation campaigns
+* Tree plantation events
 
 Advanced features:
 
-* Satellite tree data integration
+* Satellite tree coverage data
 * Environmental analytics dashboards
-* Government data integration
-* Tree plantation campaigns
+* Government environmental data integration
+* AI-based environmental insights
 
 ---
 
-# 13. Success Metrics
+# 18. Success Metrics
 
 The platform success will be measured by:
 
-* Number of active users
+* Number of registered users
 * Plantation reports submitted
-* Trees planted via the platform
+* Total trees planted via the platform
 * Participation in low-density districts
 
 ---
 
-# 14. Product Vision
+# 19. Product Vision
 
-Green Bangladesh aims to become a **national environmental awareness platform** that empowers citizens to take action in restoring the country's green ecosystem.
+Green Bangladesh aims to become a **national environmental platform** that empowers citizens to protect and expand Bangladesh’s green ecosystem through community participation and environmental data transparency.
