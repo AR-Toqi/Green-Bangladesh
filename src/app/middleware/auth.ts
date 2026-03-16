@@ -6,7 +6,7 @@ import status from 'http-status';
 import { catchAsync } from '../shared/catchAsync';
 import { envConfig } from '../../config';
 
-const auth = () => {
+const checkAuth = (...roles: string[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
 
@@ -18,18 +18,24 @@ const auth = () => {
     // check if the token is valid
     let decoded: JwtPayload;
     try {
-        decoded = jwtHelpers.verifyToken(
-            token,
-            envConfig.JWT_ACCESS_SECRET as Secret,
-          );
+      decoded = jwtHelpers.verifyToken(
+        token,
+        envConfig.JWT_ACCESS_SECRET as Secret,
+      );
     } catch (error) {
-        throw new AppError(status.UNAUTHORIZED, 'You are not authorized!');
+      throw new AppError(status.UNAUTHORIZED, 'You are not authorized!');
     }
 
     // set user to req
     req.user = decoded;
+
+    // role checking
+    if (roles.length > 0 && !roles.includes(decoded.role)) {
+      throw new AppError(status.FORBIDDEN, 'Forbidden');
+    }
+
     next();
   });
 };
 
-export default auth;
+export default checkAuth;

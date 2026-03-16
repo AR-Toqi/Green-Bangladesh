@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use('/api/v1/auth', indexRoute);
+app.use('/api/v1', indexRoute);
 
 // Test Route
 app.get('/', (req: Request, res: Response) => {

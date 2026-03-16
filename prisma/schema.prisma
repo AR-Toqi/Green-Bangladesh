@@ -4,7 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -34,28 +34,67 @@ model Profile {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String?
-  role      Role     @default(USER)
-  status    UserStatus @default(ACTIVE)
-  needsPasswordChange Boolean @default(false)
-  isDeleted     Boolean
-  deletedAt     DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  String     @id @default(uuid())
+  name                String
+  email               String     @unique
+  password            String?
+  role                Role       @default(USER)
+  status              UserStatus @default(ACTIVE)
+  needsPasswordChange Boolean    @default(false)
+  isDeleted           Boolean    @default(false)
+  deletedAt           DateTime?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
 
-  profile       Profile?
-  emailVerified Boolean   @default(false)
-  image         String?
-  sessions      Session[]
-  accounts      Account[]
+  profile           Profile?
+  emailVerified     Boolean            @default(false)
+  image             String?
+  sessions          Session[]
+  accounts          Account[]
+  plantationReports PlantationReport[]
 
   @@map("user")
 }
 
+model Division {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  districts District[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
+  @@map("division")
+}
+
+model District {
+  id                String             @id @default(uuid())
+  name              String             @unique
+  area              Float
+  estimatedTrees    Int
+  treesPerKm2       Float
+  divisionId        String
+  division          Division           @relation(fields: [divisionId], references: [id], onDelete: Cascade)
+  plantationReports PlantationReport[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@map("district")
+}
+
+model PlantationReport {
+  id            String   @id @default(uuid())
+  numberOfTrees Int
+  location      String
+  date          DateTime @default(now())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  districtId    String
+  district      District @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("plantation_report")
+}
 
 model Session {
   id        String   @id
