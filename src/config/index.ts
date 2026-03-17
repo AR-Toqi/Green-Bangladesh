@@ -14,6 +14,9 @@ interface EnvConfig {
     JWT_ACCESS_EXPIRES_IN: string;
     JWT_REFRESH_EXPIRES_IN: string;
     BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN: string;
+    ADMIN_EMAIL: string;
+    ADMIN_PASSWORD: string;
+
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -27,7 +30,9 @@ const loadEnvVariables = (): EnvConfig => {
         'JWT_REFRESH_SECRET',
         'JWT_ACCESS_EXPIRES_IN',
         'JWT_REFRESH_EXPIRES_IN',
-        'BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN'
+        'BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN',
+        'ADMIN_EMAIL',
+        'ADMIN_PASSWORD'
     ];
 
     requireEnvVariable.forEach((variable) => {
@@ -46,7 +51,9 @@ const loadEnvVariables = (): EnvConfig => {
         JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET as string,
         JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN as string,
         JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN as string,
-        BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN: process.env.BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN as string
+        BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN: process.env.BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN as string,
+        ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
+        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string
     };
 };
 

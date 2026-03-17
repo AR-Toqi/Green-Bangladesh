@@ -14,7 +14,8 @@
     "studio": "prisma studio",
     "push": "prisma db push",
     "pull": "prisma db pull",
-    "db:seed": "ts-node prisma/seed.ts"
+    "db:seed": "ts-node prisma/seed.ts",
+    "seed:admin": "tsx prisma/seed-admin.ts"
   },
   "keywords": [],
   "author": "",
