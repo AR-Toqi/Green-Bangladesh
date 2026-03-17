@@ -9,24 +9,24 @@ import { tokenHelpers } from '../../helpers/tokenHelpers';
 
 const registerUserService = async (payload: IRegister) => {
   const { name, email, password } = payload;
-   const data = await auth.api.signUpEmail({
-        body:{
-            name,
-            email,
-            password
-        }
-    });
-    if (!data.user){
-        throw new AppError(status.BAD_REQUEST, "User registration failed");
-    };
+  const data = await auth.api.signUpEmail({
+    body: {
+      name,
+      email,
+      password
+    }
+  });
+  if (!data.user) {
+    throw new AppError(status.BAD_REQUEST, "User registration failed");
+  };
 
-    const jwtPayload = {
+  const jwtPayload = {
     userId: data.user.id,
     email: data.user.email,
     role: data.user.role,
     name: data.user.name,
     status: data.user.status,
-    isDeleted: data.user.isDeleted,  
+    isDeleted: data.user.isDeleted,
     emailVerified: data.user.emailVerified
   };
 
@@ -48,13 +48,13 @@ const registerUserService = async (payload: IRegister) => {
 
 const loginUserService = async (payload: ILogin) => {
   const { email, password } = payload;
-  const session = await auth.api.signInEmail({ 
+  const session = await auth.api.signInEmail({
     body: {
-        email, password 
+      email, password
     }
   });
 
-  if (!session){
+  if (!session) {
     throw new AppError(status.UNAUTHORIZED, "Invalid email or password");
   }
 
@@ -71,7 +71,7 @@ const loginUserService = async (payload: ILogin) => {
     role: session.user.role,
     name: session.user.name,
     status: session.user.status,
-    isDeleted: session.user.isDeleted,  
+    isDeleted: session.user.isDeleted,
     emailVerified: session.user.emailVerified
   };
 
@@ -90,7 +90,7 @@ const loginUserService = async (payload: ILogin) => {
   };
 };
 
-export const authServices = {
+export const AuthServices = {
   registerUserService,
   loginUserService
 };

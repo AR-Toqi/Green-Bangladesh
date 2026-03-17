@@ -3,12 +3,12 @@ import { catchAsync } from '../../shared/catchAsync';
 import { sendResponse } from '../../shared/sendResponse';
 
 import { IRegister, ILogin } from './auth.interface';
-import { authServices } from './auth.service';
+import { AuthServices } from './auth.service';
 import { tokenHelpers } from '../../helpers/tokenHelpers';
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const payload: IRegister = req.body;
-  const result = await authServices.registerUserService(payload);
+  const result = await AuthServices.registerUserService(payload);
   const { accessToken, refreshToken, token, ...rest } = result;
 
   tokenHelpers.setAccessTokenCookie(res, accessToken);
@@ -30,7 +30,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const payload: ILogin = req.body;
-  const result = await authServices.loginUserService(payload);
+  const result = await AuthServices.loginUserService(payload);
   const { accessToken, refreshToken, token, ...rest } = result;
 
   tokenHelpers.setAccessTokenCookie(res, accessToken);
@@ -50,7 +50,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const authController = {
+export const AuthController = {
   registerUser,
   loginUser
 };
