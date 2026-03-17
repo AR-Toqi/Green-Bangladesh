@@ -66,10 +66,49 @@ const deletePlantationReport = catchAsync(async (req: Request, res: Response) =>
     });
 });
 
+const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
+    const result = await AdminServices.getAllAdmins();
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Admins fetched successfully",
+        data: result
+    });
+});
+
+const updateOwnProfile = catchAsync(async (req: Request, res: Response) => {
+    const userId = (req.user as any).userId;
+    const result = await AdminServices.updateOwnProfile(userId, req.body);
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Profile updated successfully",
+        data: result
+    });
+});
+
+const deleteAdmin = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const requestingUserId = (req.user as any).userId;
+    const result = await AdminServices.deleteAdmin(id as string, requestingUserId);
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Admin deleted successfully",
+        data: result
+    });
+});
+
 export const AdminControllers = {
     updateDistrict,
     getAllUsers,
     updateUserRole,
     updateUserStatus,
-    deletePlantationReport
+    deletePlantationReport,
+    getAllAdmins,
+    updateOwnProfile,
+    deleteAdmin
 };

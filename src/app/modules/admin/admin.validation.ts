@@ -21,8 +21,16 @@ const updateUserStatusValidationSchema = z.object({
   }),
 });
 
+const updateProfileValidationSchema = z.object({
+  body: z.object({
+    name: z.string().optional(),
+    image: z.string().optional(),
+  }),
+});
+
 export const AdminValidation = {
   updateDistrictValidationSchema,
   updateUserRoleValidationSchema,
   updateUserStatusValidationSchema,
+  updateProfileValidationSchema,
 };

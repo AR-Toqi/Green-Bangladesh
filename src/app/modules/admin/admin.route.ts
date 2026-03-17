@@ -32,6 +32,18 @@ router.patch(
     AdminControllers.updateUserStatus
 );
 
+// Admin-specific routes
+router.get("/admins", checkAuth("ADMIN"), AdminControllers.getAllAdmins);
+
+router.patch(
+    "/profile",
+    checkAuth("ADMIN"),
+    validateRequest(AdminValidation.updateProfileValidationSchema),
+    AdminControllers.updateOwnProfile
+);
+
+router.delete("/admins/:id", checkAuth("ADMIN"), AdminControllers.deleteAdmin);
+
 // Plantation routes
 router.delete("/plantations/:id", checkAuth("ADMIN"), AdminControllers.deletePlantationReport);
 
