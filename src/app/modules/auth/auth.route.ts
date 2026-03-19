@@ -18,4 +18,9 @@ router.post(
   AuthController.loginUser
 );
 
+router.post(
+  '/get-new-token',
+  AuthController.getNewToken
+);
+
 export const authRoute = router;

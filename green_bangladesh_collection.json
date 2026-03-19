@@ -11,6 +11,23 @@
 			"item": [
 				{
 					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"if (responseJson.success) {",
+									"    pm.collectionVariables.set(\"accessToken\", responseJson.data.accessToken);",
+									"    pm.collectionVariables.set(\"refreshToken\", responseJson.data.refreshToken);",
+									"    pm.collectionVariables.set(\"sessionToken\", responseJson.data.token);",
+									"    console.log(\"Tokens captured after registration.\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -47,7 +64,8 @@
 									"if (responseJson.success) {",
 									"    pm.collectionVariables.set(\"accessToken\", responseJson.data.accessToken);",
 									"    pm.collectionVariables.set(\"refreshToken\", responseJson.data.refreshToken);",
-									"    console.log(\"Tokens captured and set as collection variables.\");",
+									"    pm.collectionVariables.set(\"sessionToken\", responseJson.data.token);",
+									"    console.log(\"Tokens captured after login.\");",
 									"}"
 								],
 								"type": "text/javascript"
@@ -76,6 +94,42 @@
 								"login"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get New Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"if (responseJson.success) {",
+									"    pm.collectionVariables.set(\"accessToken\", responseJson.data.accessToken);",
+									"    pm.collectionVariables.set(\"refreshToken\", responseJson.data.refreshToken);",
+									"    pm.collectionVariables.set(\"sessionToken\", responseJson.data.token);",
+									"    console.log(\"Tokens refreshed.\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/get-new-token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"get-new-token"
+							]
+						},
+						"description": "Refresh access token using refresh token and session token from cookies."
 					},
 					"response": []
 				}
@@ -372,6 +426,10 @@
 		},
 		{
 			"key": "refreshToken",
+			"value": ""
+		},
+		{
+			"key": "sessionToken",
 			"value": ""
 		}
 	]

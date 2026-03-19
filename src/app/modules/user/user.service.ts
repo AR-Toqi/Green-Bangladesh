@@ -2,6 +2,7 @@ import status from 'http-status';
 import { prisma } from '../../lib/prisma';
 import AppError from '../../errors/AppError';
 import { TUpdateProfile } from './user.interface';
+import { UserStatus } from '../../../generated/prisma';
 
 const getME = async (userId: string) => {
   const result = await prisma.user.findUnique({
@@ -70,7 +71,7 @@ const deleteME = async (userId: string) => {
     where: { id: userId },
     data: {
       isDeleted: true,
-      status: 'DELETED',
+      status: UserStatus.DELETED,
       deletedAt: new Date(),
     },
   });

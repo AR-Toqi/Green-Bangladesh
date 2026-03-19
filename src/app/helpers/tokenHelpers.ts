@@ -41,14 +41,24 @@ const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
         secure: true,
         sameSite: 'none',
         path: '/',
-        maxAge: 60 * 60 * 24 * 1000 // 1 day
+        maxAge: 60 * 60 * 24 * 7 * 1000 // 7 days
     })
 };
-   
+
+
+const verifyAccessToken = (token: string) => {
+    return jwtHelpers.verifyToken(token, envConfig.JWT_ACCESS_SECRET as string);
+};
+
+const verifyRefreshToken = (token: string) => {
+    return jwtHelpers.verifyToken(token, envConfig.JWT_REFRESH_SECRET as string);
+};
 
 export const tokenHelpers = {
     getAccessToken,
     getRefreshToken,
+    verifyAccessToken,
+    verifyRefreshToken,
     setAccessTokenCookie,
     setRefreshTokenCookie,
     setBetterAuthSessionCookie
