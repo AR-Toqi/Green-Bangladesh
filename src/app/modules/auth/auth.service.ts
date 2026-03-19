@@ -1,10 +1,8 @@
 import status from 'http-status';
 import { auth } from '../../lib/auth';
+import { prisma } from '../../lib/prisma';
 import { IRegister, ILogin } from './auth.interface';
 import AppError from '../../errors/AppError';
-import { envConfig } from '../../../config';
-import { jwtHelpers } from '../../helpers/jwtHelpers';
-import { en, is } from 'zod/locales';
 import { tokenHelpers } from '../../helpers/tokenHelpers';
 
 const registerUserService = async (payload: IRegister) => {
@@ -19,6 +17,15 @@ const registerUserService = async (payload: IRegister) => {
   if (!data.user) {
     throw new AppError(status.BAD_REQUEST, "User registration failed");
   };
+
+  // Create Profile for the new user in a transaction
+  await prisma.$transaction(async (tx) => {
+    await tx.profile.create({
+      data: {
+        userId: data.user.id,
+      },
+    });
+  });
 
   const jwtPayload = {
     userId: data.user.id,

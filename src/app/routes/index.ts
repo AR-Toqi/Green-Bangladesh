@@ -5,12 +5,18 @@ import { PlantationRoutes } from "../modules/plantations/plantations.route";
 import { LeaderboardRoutes } from "../modules/leaderboard/leaderboard.route";
 import { AdminRoutes } from "../modules/admin/admin.route";
 
+import { UserRoutes } from "../modules/user/user.routes";
+
 const router = Router();
 
 const moduleRoutes = [
     {
         path: '/auth',
         route: authRoute,
+    },
+    {
+        path: '/users',
+        route: UserRoutes,
     },
     {
         path: '/districts',
