@@ -3,15 +3,15 @@ import status from 'http-status';
 import { catchAsync } from '../../shared/catchAsync';
 import { sendResponse } from '../../shared/sendResponse';
 
-import { IRegister, ILogin } from './auth.interface';
-import { AuthServices } from './auth.service';
+import { IRegister, ILogin, IChangePassword } from './auth.interface';
 import { tokenHelpers } from '../../helpers/tokenHelpers';
 import AppError from '../../errors/AppError';
 import { cookieUtils } from '../../helpers/cookie';
+import { AuthServices } from './auth.service';
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const payload: IRegister = req.body;
-  const result = await AuthServices.registerUserService(payload);
+  const result = await AuthServices.registerUser(payload);
   const { accessToken, refreshToken, token, ...rest } = result;
 
   tokenHelpers.setAccessTokenCookie(res, accessToken);
@@ -33,7 +33,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const payload: ILogin = req.body;
-  const result = await AuthServices.loginUserService(payload);
+  const result = await AuthServices.loginUser(payload);
   const { accessToken, refreshToken, token, ...rest } = result;
 
   tokenHelpers.setAccessTokenCookie(res, accessToken);
@@ -64,7 +64,7 @@ const getNewToken = catchAsync(async (req: Request, res: Response) => {
     throw new AppError(status.UNAUTHORIZED, 'Session token not found');
   }
 
-  const result = await AuthServices.refreshTokenService(
+  const result = await AuthServices.getNewToken(
     refreshToken,
     sessionToken,
   );
@@ -89,8 +89,72 @@ const getNewToken = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  const payload: IChangePassword = req.body;
+  const sessionToken = cookieUtils.getCookie(req, 'better-auth.session_token');
+
+  if (!sessionToken) {
+    throw new AppError(status.UNAUTHORIZED, 'Session token not found');
+  }
+
+  const result = await AuthServices.changePassword(payload, sessionToken);
+
+  const { accessToken, refreshToken, token, ...rest } = result;
+
+  tokenHelpers.setAccessTokenCookie(res, accessToken);
+  tokenHelpers.setRefreshTokenCookie(res, refreshToken);
+  tokenHelpers.setBetterAuthSessionCookie(res, token as string);
+
+  sendResponse(res, {
+    httpStatusCode: 200,
+    success: true,
+    message: 'Password changed successfully',
+    data: {
+      accessToken,
+      refreshToken,
+      ...rest,
+    },
+  });
+});
+
+const logoutUser = catchAsync(async (req: Request, res: Response) => {
+  const sessionToken = cookieUtils.getCookie(req, 'better-auth.session_token');
+
+  if (!sessionToken) {
+    throw new AppError(status.UNAUTHORIZED, 'Session token not found');
+  }
+
+  const result = await AuthServices.logoutUser(sessionToken);
+
+  cookieUtils.clearCookie(res, 'better-auth.session_token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+
+  });
+  cookieUtils.clearCookie(res, 'accessToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  });
+  cookieUtils.clearCookie(res, 'refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  });
+
+  sendResponse(res, {
+    httpStatusCode: 200,
+    success: true,
+    message: 'User logged out successfully',
+    data: result,
+  });
+});
+
 export const AuthController = {
   registerUser,
   loginUser,
   getNewToken,
+  changePassword,
+  logoutUser,
 };

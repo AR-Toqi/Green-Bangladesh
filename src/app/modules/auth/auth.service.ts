@@ -1,13 +1,13 @@
 import status from 'http-status';
 import { auth } from '../../lib/auth';
 import { prisma } from '../../lib/prisma';
-import { IRegister, ILogin } from './auth.interface';
+import { IRegister, ILogin, IChangePassword } from './auth.interface';
 import AppError from '../../errors/AppError';
 import { tokenHelpers } from '../../helpers/tokenHelpers';
 import { JwtPayload } from 'jsonwebtoken';
 
 
-const registerUserService = async (payload: IRegister) => {
+const registerUser = async (payload: IRegister) => {
   const { name, email, password } = payload;
   const data = await auth.api.signUpEmail({
     body: {
@@ -50,7 +50,7 @@ const registerUserService = async (payload: IRegister) => {
   };
 };
 
-const loginUserService = async (payload: ILogin) => {
+const loginUser = async (payload: ILogin) => {
   const { email, password } = payload;
   const session = await auth.api.signInEmail({
     body: {
@@ -91,7 +91,7 @@ const loginUserService = async (payload: ILogin) => {
   };
 };
 
-const refreshTokenService = async (
+const getNewToken = async (
   refreshToken: string,
   sessionToken: string,
 ) => {
@@ -151,8 +151,81 @@ const refreshTokenService = async (
   };
 };
 
+const changePassword = async (
+  payload: IChangePassword,
+  sessionToken: string,
+) => {
+  const session = await auth.api.getSession({
+    headers: new Headers({
+      Authorization: `Bearer ${sessionToken}`,
+    })
+  });
+
+  if (!session) {
+    throw new AppError(status.UNAUTHORIZED, 'Invalid session token');
+  }
+
+  const { currentPassword, newPassword } = payload;
+
+  const result = await auth.api.changePassword({
+    body: {
+      currentPassword,
+      newPassword,
+      revokeOtherSessions: true,
+    },
+    headers: new Headers({
+      Authorization: `Bearer ${sessionToken}`,
+    })
+  });
+
+  if (session.user.needsPasswordChange) {
+    await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        needsPasswordChange: false,
+      }
+    })
+  };
+
+  const jwtPayload = {
+    userId: session.user.id,
+    email: session.user.email,
+    role: session.user.role,
+    name: session.user.name,
+    status: session.user.status,
+    isDeleted: session.user.isDeleted,
+    emailVerified: session.user.emailVerified,
+  };
+
+  const accessToken = tokenHelpers.getAccessToken(jwtPayload);
+
+  const refreshToken = tokenHelpers.getRefreshToken(jwtPayload);
+
+  return {
+    ...result,
+    accessToken,
+    refreshToken,
+  };
+};
+
+const logoutUser = async (sessionToken: string) => {
+  const result = await auth.api.signOut({
+    headers: new Headers({
+      Authorization: `Bearer ${sessionToken}`,
+    })
+  });
+
+  return result;
+};
+
+
+
 export const AuthServices = {
-  registerUserService,
-  loginUserService,
-  refreshTokenService,
+  registerUser,
+  loginUser,
+  getNewToken,
+  changePassword,
+  logoutUser,
 };
