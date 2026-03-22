@@ -151,10 +151,46 @@ const logoutUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const verifyEmail = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthServices.verifyEmail(req.body);
+
+  sendResponse(res, {
+    httpStatusCode: 200,
+    success: true,
+    message: 'Email verified successfully',
+    data: result,
+  });
+});
+
+const forgotPassword = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthServices.forgotPassword(req.body);
+
+  sendResponse(res, {
+    httpStatusCode: 200,
+    success: true,
+    message: 'OTP sent to your email',
+    data: result,
+  });
+});
+
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthServices.resetPassword(req.body);
+
+  sendResponse(res, {
+    httpStatusCode: 200,
+    success: true,
+    message: 'Password reset successfully',
+    data: result,
+  });
+});
+
 export const AuthController = {
   registerUser,
   loginUser,
   getNewToken,
   changePassword,
   logoutUser,
+  verifyEmail,
+  forgotPassword,
+  resetPassword,
 };

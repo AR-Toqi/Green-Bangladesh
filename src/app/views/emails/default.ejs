@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= subject %></title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #2ecc71;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #2ecc71;
+            margin: 0;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.8em;
+            color: #777;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Green Bangladesh</h1>
+        </div>
+        <div class="content">
+            <h2><%= subject %></h2>
+            <p>Hi <%= name %>,</p>
+            <p><%= message %></p>
+            <% if (typeof action_url !== 'undefined') { %>
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="<%= action_url %>" class="button"><%= action_text || 'Click Here' %></a>
+                </div>
+            <% } %>
+        </div>
+        <div class="footer">
+            <p>Admin, Green Bangladesh</p>
+            <p>&copy; 2026-PRESENT Green Bangladesh. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
