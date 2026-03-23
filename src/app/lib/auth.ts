@@ -4,6 +4,7 @@ import { prisma } from "./prisma";
 import { Role, UserStatus } from "../../generated/prisma/index.js";
 import { bearer, emailOTP } from "better-auth/plugins";
 import { sendEmail } from "../utils/sendEmail";
+import { envConfig } from "../../config";
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -48,6 +49,15 @@ export const auth = betterAuth({
                 defaultValue: null,
             }
         }
+    },
+
+    socialProviders: {
+        google: {
+            clientId: envConfig.GOOGLE_CLIENT_ID,
+            clientSecret: envConfig.GOOGLE_CLIENT_SECRET,
+            accessType: "offline",
+            prompt: "select_account consent",
+        },
     },
 
     plugins: [
