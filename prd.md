@@ -55,17 +55,25 @@ Authorized users responsible for maintaining environmental data and moderating p
 
 # 4.1 Authentication System
 
-Users must authenticate before submitting plantation reports.
+Authentication is implemented using **Better Auth**, supporting secure session management and advanced flows.
 
-Authentication will be implemented using **Better Auth**.
+### Endpoints
+
+* `POST /api/auth/register` – User signup
+* `POST /api/auth/login` – User login
+* `POST /api/auth/logout` – Session termination
+* `POST /api/auth/get-new-token` – Refresh access token
+* `POST /api/auth/change-password` – Update user password
+* `POST /api/auth/verify-email` – Email verification flow
+* `POST /api/auth/forgot-password` – Request password reset
+* `POST /api/auth/reset-password` – Complete password reset
 
 ### Features
 
-* User signup
-* User login
-* Session management
-* Secure authentication
+* Secure session management
+* Token rotation (refresh tokens)
 * Role-based authorization
+* Email verification and password recovery
 
 ---
 
@@ -209,27 +217,27 @@ Regular users **cannot modify district environmental data**.
 
 ---
 
-# 7. User Management (Admin Only)
+# 7. User & Profile Management
 
-Admins can manage all registered users.
+The system allows users to manage their own profiles and admins to manage all platform users.
 
-### Admin Capabilities
+### User Self-Management
 
-* View all users
-* Search users
-* Change user roles
-* Suspend users
-* Delete users (optional)
+* `GET /api/users/me` – Retrieve own profile and account details
+* `PATCH /api/users/me` – Update own profile (name, bio, avatar)
+* `DELETE /api/users/me` – Deactivate/Delete own account
 
-### Admin User Data View
+### Admin User Management
 
-Admins can see:
+* `GET /api/admin/users` – View all users (with plantation stats)
+* `PATCH /api/admin/users/:id/role` – Change user roles (USER/ADMIN)
+* `PATCH /api/admin/users/:id/status` – Change account status (ACTIVE/BLOCKED)
 
-* User name
-* Email
-* Role
-* Total trees planted
-* Number of plantation reports
+### Admin Account Management
+
+* `GET /api/admin/admins` – View list of all administrators
+* `DELETE /api/admin/admins/:id` – Remove an administrator (soft delete)
+* `PATCH /api/admin/profile` – Admin updates their own administrative profile
 
 ---
 
@@ -250,11 +258,14 @@ Admins can monitor plantation reports to maintain platform integrity.
 
 ### Core Entities
 
-User
-Profile
-Division
-District
-PlantationReport
+* **User**: Account credentials, roles, and status.
+* **Profile**: Extended user information (bio, avatar).
+* **Division**: High-level administrative regions.
+* **District**: Specific areas with environmental metrics (tree density).
+* **PlantationReport**: Community-submitted data for tree planting.
+* **Session**: Better Auth session tokens.
+* **Account**: Linked authentication providers (Better Auth).
+* **Verification**: Email and reset verification tokens (Better Auth).
 
 ---
 
@@ -345,25 +356,20 @@ Returns districts ranked by total planted trees.
 
 ### District Management
 
-POST /api/admin/districts
-PATCH /api/admin/districts/:id
-GET /api/admin/districts
+* `PATCH /api/admin/districts/:id` – Update environmental metrics (area, estimated trees, density)
 
----
+### User & Admin Management
 
-### User Management
-
-GET /api/admin/users
-PATCH /api/admin/users/:id/role
-PATCH /api/admin/users/:id/status
-DELETE /api/admin/users/:id
-
----
+* `GET /api/admin/users` – List all users
+* `PATCH /api/admin/users/:id/role` – Update user role
+* `PATCH /api/admin/users/:id/status` – Update user status (ACTIVE/BLOCKED)
+* `GET /api/admin/admins` – List all administrators
+* `DELETE /api/admin/admins/:id` – Soft delete an administrator account
+* `PATCH /api/admin/profile` – Update admin's own profile
 
 ### Plantation Moderation
 
-GET /api/admin/plantations
-DELETE /api/admin/plantations/:id
+* `DELETE /api/admin/plantations/:id` – Delete invalid or spam reports
 
 ---
 
