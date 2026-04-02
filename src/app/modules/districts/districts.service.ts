@@ -2,11 +2,11 @@ import { prisma } from "../../lib/prisma";
 
 
 const calculateScoreAndZone = (treesPerKm2: number) => {
-    let score = (treesPerKm2 / 12000) * 100;
-    score = Math.min(100, Math.max(0, score)); // Clamp 0-100
+    let score = (treesPerKm2 / 5000) * 100;
+    score = Math.min(100, Math.max(0, score));
 
     let zone: 'RED' | 'ORANGE' | 'GREEN';
-    if (score <= 30) {
+    if (score <= 25) {
         zone = 'RED';
     } else if (score <= 50) {
         zone = 'ORANGE';

@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
-app.all(/^\/api\/auth\/.*/, toNodeHandler(auth));
+// app.all(/^\/api\/auth\/.*/, toNodeHandler(auth));
 
 // Routes
 app.use('/api/v1', indexRoute);

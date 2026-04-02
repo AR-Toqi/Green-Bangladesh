@@ -89,9 +89,9 @@ Zones are derived from the **tree density score**.
 
 | Score Range | Zone        | Color |
 | ----------- | ----------- | ----- |
-| 1 – 30      | Red Zone    | 🔴    |
-| 31 – 50     | Orange Zone | 🟠    |
-| > 50        | Green Zone  | 🟢    |
+| 1 – 25      | Red Zone    | 🔴    |
+| 26 – 60     | Orange Zone | 🟠    |
+| > 60        | Green Zone  | 🟢    |
 
 ### Map Capabilities
 
@@ -288,7 +288,7 @@ Tree density score is calculated dynamically in the backend.
 Formula:
 
 ```
-score = (treesPerKm2 / 12000) * 100
+score = (treesPerKm2 / 3000) * 100
 ```
 
 Score is clamped between **0 and 100**.
@@ -300,9 +300,9 @@ Score is clamped between **0 and 100**.
 Zone is derived from the tree density score.
 
 ```
-Score <= 30  → RED
-Score <= 50  → ORANGE
-Score > 50   → GREEN
+Score <= 25  → RED
+Score <= 60  → ORANGE
+Score > 60   → GREEN
 ```
 
 Zone values are **not stored in the database**.
