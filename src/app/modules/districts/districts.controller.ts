@@ -5,7 +5,7 @@ import { DistrictServices } from "./districts.service.js";
 import { sendResponse } from "../../shared/sendResponse.js";
 
 const getAllDistricts = catchAsync(async (req: Request, res: Response) => {
-    const result = await DistrictServices.getAllDistrictsFromDB();
+    const result = await DistrictServices.getAllDistricts();
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -17,7 +17,7 @@ const getAllDistricts = catchAsync(async (req: Request, res: Response) => {
 
 const getSingleDistrict = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await DistrictServices.getSingleDistrictFromDB(id as string);
+    const result = await DistrictServices.getDistrictById(id as string);
 
     sendResponse(res, {
         httpStatusCode: status.OK,

@@ -24,6 +24,7 @@ const checkAuth = (...roles: string[]) => {
 
       if (session) {
         decoded = {
+          id: session.user.id,
           userId: session.user.id,
           email: session.user.email,
           role: session.user.role,
@@ -50,6 +51,10 @@ const checkAuth = (...roles: string[]) => {
 
     if (!decoded) {
       throw new AppError(status.UNAUTHORIZED, 'You are not authorized!');
+    }
+
+    if (decoded && !decoded.id && decoded.userId) {
+      decoded.id = decoded.userId;
     }
 
     // set user to req

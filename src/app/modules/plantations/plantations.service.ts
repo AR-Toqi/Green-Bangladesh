@@ -1,14 +1,14 @@
 import { prisma } from "../../lib/prisma";
 import { IPlantationReport } from "./plantations.interface";
 
-const createPlantationReportIntoDB = async (payload: IPlantationReport) => {
+const createPlantationReport = async (payload: IPlantationReport) => {
     const result = await prisma.plantationReport.create({
         data: payload
     });
     return result;
 };
 
-const getAllPlantationReportsFromDB = async () => {
+const getAllPlantationReports = async () => {
     const result = await prisma.plantationReport.findMany({
         include: {
             user: {
@@ -23,7 +23,7 @@ const getAllPlantationReportsFromDB = async () => {
     return result;
 };
 
-const getDistrictPlantationReportsFromDB = async (districtId: string) => {
+const getDistrictPlantationReports = async (districtId: string) => {
     const result = await prisma.plantationReport.findMany({
         where: { districtId },
         include: {
@@ -39,7 +39,7 @@ const getDistrictPlantationReportsFromDB = async (districtId: string) => {
 };
 
 export const PlantationServices = {
-    createPlantationReportIntoDB,
-    getAllPlantationReportsFromDB,
-    getDistrictPlantationReportsFromDB
+    createPlantationReport,
+    getAllPlantationReports,
+    getDistrictPlantationReports
 };

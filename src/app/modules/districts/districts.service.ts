@@ -17,7 +17,7 @@ const calculateScoreAndZone = (treesPerKm2: number) => {
     return { score: Number(score.toFixed(2)), zone };
 };
 
-const getAllDistrictsFromDB = async () => {
+const getAllDistricts = async () => {
     const districts = await prisma.district.findMany({
         include: {
             division: true
@@ -34,7 +34,7 @@ const getAllDistrictsFromDB = async () => {
     });
 };
 
-const getSingleDistrictFromDB = async (id: string) => {
+const getDistrictById = async (id: string) => {
     const district = await prisma.district.findUnique({
         where: { id },
         include: {
@@ -55,6 +55,6 @@ const getSingleDistrictFromDB = async (id: string) => {
 };
 
 export const DistrictServices = {
-    getAllDistrictsFromDB,
-    getSingleDistrictFromDB
+    getAllDistricts,
+    getDistrictById
 };

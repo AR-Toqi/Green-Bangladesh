@@ -6,9 +6,11 @@ import { sendResponse } from "../../shared/sendResponse";
 
 const createPlantationReport = catchAsync(async (req: Request, res: Response) => {
     const user = req.user;
-    const result = await PlantationServices.createPlantationReportIntoDB({
-        ...req.body,
-        userId: user.userId
+    const result = await PlantationServices.createPlantationReport({
+        districtId: req.body.districtId,
+        numberOfTrees: req.body.numberOfTrees,
+        location: req.body.location,
+        userId: user.id || user.userId
     });
 
     sendResponse(res, {
@@ -20,7 +22,7 @@ const createPlantationReport = catchAsync(async (req: Request, res: Response) =>
 });
 
 const getAllPlantationReports = catchAsync(async (req: Request, res: Response) => {
-    const result = await PlantationServices.getAllPlantationReportsFromDB();
+    const result = await PlantationServices.getAllPlantationReports();
 
     sendResponse(res, {
         httpStatusCode: status.OK,
