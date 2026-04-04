@@ -31,6 +31,8 @@ router.patch(
     validateRequest(AdminValidation.updateUserStatusValidationSchema),
     AdminControllers.updateUserStatus
 );
+ 
+router.delete("/users/:id", checkAuth("ADMIN"), AdminControllers.deleteUser);
 
 // Admin-specific routes
 router.get("/admins", checkAuth("ADMIN"), AdminControllers.getAllAdmins);
@@ -45,6 +47,7 @@ router.patch(
 router.delete("/admins/:id", checkAuth("ADMIN"), AdminControllers.deleteAdmin);
 
 // Plantation routes
+router.get("/plantations", checkAuth("ADMIN"), AdminControllers.getAllPlantationReports);
 router.delete("/plantations/:id", checkAuth("ADMIN"), AdminControllers.deletePlantationReport);
 
 export const AdminRoutes = router;

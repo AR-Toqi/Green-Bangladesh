@@ -10,7 +10,8 @@ const createPlantationReport = catchAsync(async (req: Request, res: Response) =>
         districtId: req.body.districtId,
         numberOfTrees: req.body.numberOfTrees,
         location: req.body.location,
-        userId: user.id || user.userId
+        userId: user.id || user.userId,
+        date: new Date(req.body.date)
     });
 
     sendResponse(res, {

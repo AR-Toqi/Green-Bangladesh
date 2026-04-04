@@ -22,6 +22,9 @@ const updateDistrictEnvironmentalMetrics = async (id: string, payload: { area?: 
 
 const getAllUsers = async () => {
     const result = await prisma.user.findMany({
+        where: {
+            isDeleted: false
+        },
         select: {
             id: true,
             name: true,
@@ -120,6 +123,22 @@ const updateOwnProfile = async (userId: string, payload: { name?: string }) => {
     return result;
 };
 
+const deleteUser = async (id: string) => {
+    const user = await prisma.user.findUnique({
+        where: { id, isDeleted: false }
+    });
+
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    const result = await prisma.user.update({
+        where: { id },
+        data: { isDeleted: true }
+    });
+    return result;
+};
+
 const deleteAdmin = async (targetId: string, requestingUserId: string) => {
     if (targetId === requestingUserId) {
         throw new AppError(httpStatus.FORBIDDEN, "You cannot delete your own account");
@@ -144,6 +163,30 @@ const deleteAdmin = async (targetId: string, requestingUserId: string) => {
     return result;
 };
 
+const getAllPlantationReports = async () => {
+    const result = await prisma.plantationReport.findMany({
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true
+                }
+            },
+            district: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
+    return result;
+};
+
 export const AdminServices = {
     updateDistrictEnvironmentalMetrics,
     getAllUsers,
@@ -152,5 +195,7 @@ export const AdminServices = {
     deletePlantationReport,
     getAllAdmins,
     updateOwnProfile,
-    deleteAdmin
+    deleteAdmin,
+    deleteUser,
+    getAllPlantationReports
 };

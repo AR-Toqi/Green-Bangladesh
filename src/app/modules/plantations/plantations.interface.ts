@@ -3,4 +3,5 @@ export type IPlantationReport = {
     location: string;
     districtId: string;
     userId: string;
+    date: Date;
 };
