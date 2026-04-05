@@ -1,17 +1,28 @@
-import { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { envConfig } from "../../config";
-import { jwtHelpers } from "./jwtHelpers";
 import { cookieUtils } from "./cookie";
 import { Response } from "express";
 
+const generateToken = (
+    payload: JwtPayload,
+    secret: Secret,
+    expiresIn: string,
+) => {
+    return jwt.sign(payload, secret, {
+        expiresIn: expiresIn as any,
+    });
+};
+
+const verifyToken = (token: string, secret: Secret) => {
+    return jwt.verify(token, secret) as JwtPayload;
+};
+
 const getAccessToken = (payload: JwtPayload) => {
-    const accessToken = jwtHelpers.generateToken(payload, envConfig.JWT_ACCESS_SECRET as string, envConfig.JWT_ACCESS_EXPIRES_IN as string);
-    return accessToken;
+    return generateToken(payload, envConfig.JWT_ACCESS_SECRET as string, envConfig.JWT_ACCESS_EXPIRES_IN as string);
 };
 
 const getRefreshToken = (payload: JwtPayload) => {
-    const refreshToken = jwtHelpers.generateToken(payload, envConfig.JWT_REFRESH_SECRET as string, envConfig.JWT_REFRESH_EXPIRES_IN as string);
-    return refreshToken;
+    return generateToken(payload, envConfig.JWT_REFRESH_SECRET as string, envConfig.JWT_REFRESH_EXPIRES_IN as string);
 };
 
 const setAccessTokenCookie = (res: Response, accessToken: string) => {
@@ -47,14 +58,16 @@ const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
 
 
 const verifyAccessToken = (token: string) => {
-    return jwtHelpers.verifyToken(token, envConfig.JWT_ACCESS_SECRET as string);
+    return verifyToken(token, envConfig.JWT_ACCESS_SECRET as string);
 };
 
 const verifyRefreshToken = (token: string) => {
-    return jwtHelpers.verifyToken(token, envConfig.JWT_REFRESH_SECRET as string);
+    return verifyToken(token, envConfig.JWT_REFRESH_SECRET as string);
 };
 
 export const tokenHelpers = {
+    generateToken,
+    verifyToken,
     getAccessToken,
     getRefreshToken,
     verifyAccessToken,
@@ -62,4 +75,4 @@ export const tokenHelpers = {
     setAccessTokenCookie,
     setRefreshTokenCookie,
     setBetterAuthSessionCookie
-}
+}

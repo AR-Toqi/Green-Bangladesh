@@ -3,9 +3,9 @@ import { ZodError } from 'zod';
 
 import { TErrorSources } from '../interfaces/error';
 import { envConfig } from '../../config';
-import handleZodError from '../errorHelpers/handleZodError';
+import handleZodError from '../errors/handlers/handleZodError';
 import AppError from '../errors/AppError';
-import handlePrismaError from '../errorHelpers/handlePrismaError';
+import handlePrismaError from '../errors/handlers/handlePrismaError';
 import { Prisma } from '../../generated/prisma/client';
 
 export const globalErrorHandler = (

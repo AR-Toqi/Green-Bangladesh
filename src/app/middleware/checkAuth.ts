@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { JwtPayload, Secret } from 'jsonwebtoken';
-import { jwtHelpers } from '../helpers/jwtHelpers';
+import { tokenHelpers } from '../helpers/tokenHelpers';
 import AppError from '../errors/AppError';
 import status from 'http-status';
 import { catchAsync } from '../shared/catchAsync';
@@ -40,7 +40,7 @@ const checkAuth = (...roles: string[]) => {
     const token = headerToken || cookieAccessToken;
     if (!decoded && token) {
       try {
-        decoded = jwtHelpers.verifyToken(
+        decoded = tokenHelpers.verifyToken(
           token,
           envConfig.JWT_ACCESS_SECRET as Secret,
         );

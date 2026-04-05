@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { authRoute } from "../modules/auth/auth.route";
-import { DistrictRoutes } from "../modules/districts/districts.route";
-import { PlantationRoutes } from "../modules/plantations/plantations.route";
-import { LeaderboardRoutes } from "../modules/leaderboard/leaderboard.route";
-import { AdminRoutes } from "../modules/admin/admin.route";
+import { authRoute } from "../modules/auth/auth.routes";
+import { DistrictRoutes } from "../modules/districts/districts.routes";
+import { PlantationRoutes } from "../modules/plantations/plantations.routes";
+import { LeaderboardRoutes } from "../modules/leaderboard/leaderboard.routes";
+import { AdminRoutes } from "../modules/admin/admin.routes";
 
 import { UserRoutes } from "../modules/user/user.routes";
 

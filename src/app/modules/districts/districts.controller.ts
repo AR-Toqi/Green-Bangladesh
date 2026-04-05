@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { catchAsync } from "../../shared/catchAsync.js";
-import { DistrictServices } from "./districts.service.js";
-import { sendResponse } from "../../shared/sendResponse.js";
+import { catchAsync } from "../../shared/catchAsync";
+import { DistrictServices } from "./districts.service";
+import { sendResponse } from "../../shared/sendResponse";
 
 const getAllDistricts = catchAsync(async (req: Request, res: Response) => {
     const result = await DistrictServices.getAllDistricts();
