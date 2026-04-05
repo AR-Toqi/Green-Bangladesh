@@ -2,7 +2,8 @@ import status from 'http-status';
 import { prisma } from '../../lib/prisma';
 import AppError from '../../errors/AppError';
 import { TUpdateProfile } from './user.interface';
-import { UserStatus } from '../../../generated/prisma';
+import pkg from "@prisma/client";
+const { UserStatus } = pkg;
 
 const getME = async (userId: string) => {
   const result = await prisma.user.findUnique({

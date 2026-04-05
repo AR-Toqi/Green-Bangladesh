@@ -1,7 +1,8 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
-import { Role } from "../../../generated/prisma";
+import pkg from "@prisma/client";
+const { Role, UserStatus } = pkg;
 
 
 const updateDistrictEnvironmentalMetrics = async (id: string, payload: { area?: number; estimatedTrees?: number; treesPerKm2?: number }) => {

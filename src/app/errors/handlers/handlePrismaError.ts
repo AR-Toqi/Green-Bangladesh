@@ -1,9 +1,10 @@
-
-import { Prisma } from '../../generated/prisma/client';
-import { TErrorSources, TGenericErrorResponse } from '../interfaces/error';
+import { type Prisma as PrismaType } from '@prisma/client';
+import pkg from '@prisma/client';
+const Prisma = (pkg as any).Prisma;
+import { TErrorSources, TGenericErrorResponse } from "../../interfaces/error";
 
 const handlePrismaError = (
-  err: Prisma.PrismaClientKnownRequestError
+  err: PrismaType.PrismaClientKnownRequestError
 ): TGenericErrorResponse => {
   let errorSources: TErrorSources = [];
   let message = '';

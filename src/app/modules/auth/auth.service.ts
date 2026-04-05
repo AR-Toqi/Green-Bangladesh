@@ -5,7 +5,8 @@ import { IRegister, ILogin, IChangePassword } from './auth.interface';
 import AppError from '../../errors/AppError';
 import { tokenHelpers } from '../../helpers/tokenHelpers';
 import { JwtPayload } from 'jsonwebtoken';
-import { UserStatus } from '../../../generated/prisma';
+import pkg from "@prisma/client";
+const { Role, UserStatus } = pkg;
 
 
 const registerUser = async (payload: IRegister) => {

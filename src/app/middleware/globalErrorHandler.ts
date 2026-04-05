@@ -6,7 +6,8 @@ import { envConfig } from '../../config';
 import handleZodError from '../errors/handlers/handleZodError';
 import AppError from '../errors/AppError';
 import handlePrismaError from '../errors/handlers/handlePrismaError';
-import { Prisma } from '../../generated/prisma/client';
+import pkg from '@prisma/client';
+const Prisma = (pkg as any).Prisma;
 
 export const globalErrorHandler = (
   err: any,
