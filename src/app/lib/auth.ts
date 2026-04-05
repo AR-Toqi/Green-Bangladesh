@@ -7,6 +7,8 @@ import { sendEmail } from "../utils/sendEmail";
 import { envConfig } from "../../config";
 
 export const auth = betterAuth({
+    baseUrl: envConfig.BETTER_AUTH_URL,
+    secret: envConfig.BETTER_AUTH_SECRET,
     database: prismaAdapter(prisma, {
         provider: "postgresql"
     }),
@@ -123,6 +125,29 @@ export const auth = betterAuth({
         cookieCache: {
             enabled: true,
             maxAge: 60 * 60 * 60 * 24, // 1 day in seconds
+        }
+    },
+    trustedOrigins: [envConfig.BETTER_AUTH_URL, envConfig.FRONTEND_URL],
+    advanced: {
+        // disableCSRFCheck: true,
+        useSecureCookies: false,
+        cookies: {
+            state: {
+                attributes: {
+                    sameSite: "none",
+                    secure: true,
+                    httpOnly: true,
+                    path: "/",
+                }
+            },
+            sessionToken: {
+                attributes: {
+                    sameSite: "none",
+                    secure: true,
+                    httpOnly: true,
+                    path: "/",
+                }
+            }
         }
     }
 

@@ -6,15 +6,25 @@ import { globalErrorHandler } from './app/middleware/globalErrorHandler';
 import { notFound } from './app/middleware/notFound';
 import { toNodeHandler } from 'better-auth/node';
 import { auth } from './app/lib/auth';
+import { envConfig } from './config';
 
 const app: Application = express();
+
+
+app.use(cors(
+  {
+    origin: [envConfig.FRONTEND_URL, envConfig.BETTER_AUTH_URL],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }
+));
+
+app.use("/api/auth", toNodeHandler(auth));
 
 // Parsers
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
-
-// app.all(/^\/api\/auth\/.*/, toNodeHandler(auth));
 
 // Routes
 app.use('/api/v1', indexRoute);
