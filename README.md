@@ -2,6 +2,9 @@
 
 **Green Bangladesh** is a robust backend API designed to visualize tree density across all 64 districts of Bangladesh and encourage citizen-led plantation efforts. The platform categorizes districts into environmental zones and allows users to report their plantation activities, contributing to a community-driven green movement.
 
+
+**Live API URL**: [https://green-bangladesh-api.vercel.app](https://green-bangladesh-api.vercel.app)
+
 ---
 
 ## 🚀 Features
