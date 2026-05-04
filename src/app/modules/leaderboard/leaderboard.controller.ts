@@ -4,14 +4,22 @@ import { catchAsync } from "../../shared/catchAsync";
 import { LeaderboardServices } from "./leaderboard.service";
 import { sendResponse } from "../../shared/sendResponse";
 
+import { paginationHelper } from "../../helpers/paginationHelper";
+
 const getLeaderboard = catchAsync(async (req: Request, res: Response) => {
-    const result = await LeaderboardServices.getLeaderboardFromDB();
+    const paginationOptions = paginationHelper.calculatePagination({
+        page: Number(req.query.page),
+        limit: Number(req.query.limit),
+    });
+
+    const result = await LeaderboardServices.getLeaderboardFromDB(paginationOptions);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
         success: true,
         message: "Leaderboard fetched successfully",
-        data: result
+        meta: result.meta,
+        data: result.data
     });
 });
 

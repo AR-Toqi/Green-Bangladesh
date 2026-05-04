@@ -17,6 +17,8 @@ const getME = async (userId: string) => {
       email: true,
       needsPasswordChange: true,
       profile: true,
+      districtId: true,
+      district: true,
     },
   });
 
@@ -31,14 +33,17 @@ const updateME = async (
   userId: string,
   payload: TUpdateProfile,
 ) => {
-  const { name, ...profileData } = payload;
+  const { name, districtId, ...profileData } = payload;
 
   const result = await prisma.$transaction(async (tx) => {
-    // Update User name if provided
-    if (name) {
+    // Update User name or districtId if provided
+    if (name || districtId) {
       await tx.user.update({
         where: { id: userId },
-        data: { name },
+        data: {
+          ...(name && { name }),
+          ...(districtId && { districtId }),
+        },
       });
     }
 
@@ -60,6 +65,8 @@ const updateME = async (
         name: true,
         email: true,
         profile: true,
+        districtId: true,
+        district: true,
       },
     });
   });

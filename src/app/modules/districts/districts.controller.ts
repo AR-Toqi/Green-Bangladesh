@@ -4,14 +4,25 @@ import { catchAsync } from "../../shared/catchAsync";
 import { DistrictServices } from "./districts.service";
 import { sendResponse } from "../../shared/sendResponse";
 
+import { paginationHelper } from "../../helpers/paginationHelper";
+
 const getAllDistricts = catchAsync(async (req: Request, res: Response) => {
-    const result = await DistrictServices.getAllDistricts();
+    const filters = req.query; // You might want to filter out non-pagination fields here
+    const paginationOptions = paginationHelper.calculatePagination({
+        page: Number(req.query.page),
+        limit: Number(req.query.limit),
+        sortBy: req.query.sortBy as string,
+        sortOrder: req.query.sortOrder as string,
+    });
+
+    const result = await DistrictServices.getAllDistricts(paginationOptions);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
         success: true,
         message: "Districts fetched successfully",
-        data: result
+        meta: result.meta,
+        data: result.data
     });
 });
 

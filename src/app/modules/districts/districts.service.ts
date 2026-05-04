@@ -17,14 +17,23 @@ const calculateScoreAndZone = (treesPerKm2: number) => {
     return { score: Number(score.toFixed(2)), zone };
 };
 
-const getAllDistricts = async () => {
+const getAllDistricts = async (options: any) => {
+    const { page, limit, skip, sortBy, sortOrder } = options;
+
     const districts = await prisma.district.findMany({
+        skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder
+        },
         include: {
             division: true
         }
     });
 
-    return districts.map(district => {
+    const total = await prisma.district.count();
+
+    const result = districts.map(district => {
         const { score, zone } = calculateScoreAndZone(district.treesPerKm2);
         return {
             ...district,
@@ -32,6 +41,15 @@ const getAllDistricts = async () => {
             zone
         };
     });
+
+    return {
+        meta: {
+            page,
+            limit,
+            total
+        },
+        data: result
+    };
 };
 
 const getDistrictById = async (id: string) => {

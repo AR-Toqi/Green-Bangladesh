@@ -55,6 +55,8 @@ model User {
   sessions          Session[]
   accounts          Account[]
   plantationReports PlantationReport[]
+  districtId        String?
+  district          District?          @relation(fields: [districtId], references: [id])
 
   @@map("user")
 }
@@ -80,6 +82,7 @@ model District {
   plantationReports PlantationReport[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
+  users             User[]
 
   @@map("district")
 }

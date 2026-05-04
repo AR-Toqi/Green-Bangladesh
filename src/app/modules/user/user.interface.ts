@@ -3,4 +3,5 @@ export type TUpdateProfile = {
   address?: string;
   bio?: string;
   avatarUrl?: string;
+  districtId?: string;
 };
