@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { calculateCO2Offset } from "../../helpers/environmental";
 
 
 const calculateScoreAndZone = (treesPerKm2: number) => {
@@ -35,10 +36,12 @@ const getAllDistricts = async (options: any) => {
 
     const result = districts.map(district => {
         const { score, zone } = calculateScoreAndZone(district.treesPerKm2);
+        const co2Impact = calculateCO2Offset(district.estimatedTrees);
         return {
             ...district,
             score,
-            zone
+            zone,
+            co2Impact
         };
     });
 
@@ -65,10 +68,12 @@ const getDistrictById = async (id: string) => {
     }
 
     const { score, zone } = calculateScoreAndZone(district.treesPerKm2);
+    const co2Impact = calculateCO2Offset(district.estimatedTrees);
     return {
         ...district,
         score,
-        zone
+        zone,
+        co2Impact
     };
 };
 

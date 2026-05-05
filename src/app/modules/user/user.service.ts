@@ -1,6 +1,7 @@
 import status from 'http-status';
 import { prisma } from '../../lib/prisma';
 import AppError from '../../errors/AppError';
+import { calculateCO2Offset } from '../../helpers/environmental';
 import { TUpdateProfile } from './user.interface';
 import pkg from "@prisma/client";
 const { UserStatus } = pkg;
@@ -19,6 +20,11 @@ const getME = async (userId: string) => {
       profile: true,
       districtId: true,
       district: true,
+      plantationReports: {
+        select: {
+          numberOfTrees: true
+        }
+      }
     },
   });
 
@@ -26,7 +32,14 @@ const getME = async (userId: string) => {
     throw new AppError(status.NOT_FOUND, 'User not found!');
   }
 
-  return result;
+  const totalTrees = result.plantationReports.reduce((acc, report) => acc + report.numberOfTrees, 0);
+  const co2Impact = calculateCO2Offset(totalTrees);
+
+  return {
+    ...result,
+    totalTrees,
+    co2Impact
+  };
 };
 
 const updateME = async (
